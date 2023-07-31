@@ -9,11 +9,43 @@ from .models import Account
 from .serializers import AccountSerializer
 
 
-class AccountList(generics.ListCreateAPIView):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
+class AccountListView(APIView):
+    def get(self, request, *args, **kwargs):
+        accounts = Account.objects.all()
+        serializer = AccountSerializer(accounts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = {
+            "username": request.data.get("username"),
+            "first_name": request.data.get("first_name"),
+        }
+        serializer = AccountSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AccountDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
+class AccountView(APIView):
+    # add permission to check if user is authenticated
+    # permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, account_id, *args, **kwargs):
+        print(account_id)
+        account_instance = self.get_object(account_id)
+        if not account_instance:
+            return Response(
+                {"res": f"Object with account id {account_id} does not exists"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = AccountSerializer(account_instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_object(self, account_id):
+        try:
+            return Account.objects.get(id=account_id)
+        except Account.DoesNotExist:
+            return None

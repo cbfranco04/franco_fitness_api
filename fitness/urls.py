@@ -3,10 +3,10 @@ from django.urls import path, include
 from fitness import views
 
 urlpatterns = [
-    path("account/", views.AccountList.as_view(), name="account-list"),
+    path("account/", views.AccountListView.as_view(), name="account-list"),
     path(
-        "account/<int:pk>/",
-        views.AccountDetail.as_view(),
+        "account/<int:account_id>/",
+        views.AccountView.as_view(),
         name="account-detail",
     ),
 ]
