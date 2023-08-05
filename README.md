@@ -43,3 +43,13 @@ Changes to migration:
 ```
 python manage.py makemigrations
 ```
+
+## Troubleshooting
+
+### Fix for error "Command 'pkg-config --exists mysqlclient' returned non-zero exit status 127."
+
+Possible fixes to run:
+```
+brew install mysql
+brew install pkg-config
+```
