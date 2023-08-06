@@ -7,7 +7,13 @@ urlpatterns = [
     path(
         "account/<int:account_id>/",
         views.AccountView.as_view(),
-        name="account-detail",
+        name="account_detail",
+    ),
+    path('activities/<int:pk>/', views.ActivityView.as_view(), name='activity_detail'),
+    path(
+        "account/<int:account_id>/activities",
+        views.ActivityListView.as_view(),
+        name="activity_list",
     ),
 ]
 

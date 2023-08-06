@@ -7,4 +7,5 @@ class Account(models.Model):
 
 
 class Activity(models.Model):
-    activity_name = models.CharField(max_length=30, blank=False, default="")
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=100, blank=False, default="")

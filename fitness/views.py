@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework import generics
-from .models import Account
-from .serializers import AccountSerializer
+from .models import Account, Activity
+from .serializers import AccountSerializer, ActivitySerializer
 
 
 class AccountListView(APIView):
@@ -16,6 +16,8 @@ class AccountListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        # verify payload is correct foramt
+
         data = {
             "username": request.data.get("username"),
             "first_name": request.data.get("first_name"),
@@ -37,7 +39,7 @@ class AccountView(APIView):
         account_instance = self.get_object(account_id)
         if not account_instance:
             return Response(
-                {"res": f"Object with account id {account_id} does not exists"},
+                {"error": f"Object with account id {account_id} does not exists"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -49,3 +51,28 @@ class AccountView(APIView):
             return Account.objects.get(id=account_id)
         except Account.DoesNotExist:
             return None
+
+
+class ActivityListView(APIView):
+    def get(self, request, account_id, *args, **kwargs):
+        account = Account.objects.filter(id=account_id).first()
+        if not account:
+            return Response(
+                {"error": "Account not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        activities = Activity.objects.filter(account=account)
+        serializer = ActivitySerializer(activities, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ActivityView(APIView):
+    def get(self, request, pk):
+        activity = Activity.objects.filter(id=pk).first()
+        if not activity:
+            return Response(
+                {"error": "Activity not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = ActivitySerializer(activity)
+        return Response(serializer.data, status=status.HTTP_200_OK)
