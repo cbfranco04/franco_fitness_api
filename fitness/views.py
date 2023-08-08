@@ -6,7 +6,8 @@ from rest_framework import status
 from rest_framework import permissions
 from rest_framework import generics
 from .models import Account, Activity
-from .serializers import AccountSerializer, ActivitySerializer
+from .serializers.account import AccountSerializer
+from .serializers.activity import ActivitySerializer
 
 
 class AccountListView(APIView):
