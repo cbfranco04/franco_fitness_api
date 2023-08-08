@@ -16,7 +16,7 @@ class AccountListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        # verify payload is correct foramt
+        # TODO: verify payload is correct format
 
         data = {
             "username": request.data.get("username"),
@@ -39,7 +39,7 @@ class AccountView(APIView):
         account_instance = self.get_object(account_id)
         if not account_instance:
             return Response(
-                {"error": f"Object with account id {account_id} does not exists"},
+                {"error": f"Account with id {account_id} does not exists"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -54,16 +54,34 @@ class AccountView(APIView):
 
 
 class ActivityListView(APIView):
-    def get(self, request, account_id, *args, **kwargs):
+    def get(self, request, account_id):
         account = Account.objects.filter(id=account_id).first()
         if not account:
             return Response(
-                {"error": "Account not found."}, status=status.HTTP_404_NOT_FOUND
+                {"error": f"Account with id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
         activities = Activity.objects.filter(account=account)
         serializer = ActivitySerializer(activities, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, account_id):
+        # TODO: verify payload is correct format
+        data = {
+            "title": request.data.get("title"),
+        }
+
+        account = Account.objects.filter(id=account_id).first()
+        if not account:
+            return Response({"error": f"Account with id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        
+        serializer = ActivitySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(account=account)  # Assign the 'account' to the new activity
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ActivityView(APIView):
