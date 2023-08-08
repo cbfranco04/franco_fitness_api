@@ -1,18 +1,18 @@
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.urls import path, include
-from fitness import views
+from fitness.views import account, activity
 
 urlpatterns = [
-    path("account/", views.AccountListView.as_view(), name="account-list"),
+    path("account/", account.AccountListView.as_view(), name="account-list"),
     path(
         "account/<int:account_id>/",
-        views.AccountView.as_view(),
+        account.AccountView.as_view(),
         name="account_detail",
     ),
-    path('activities/<int:pk>/', views.ActivityView.as_view(), name='activity_detail'),
+    path('activities/<int:pk>/', activity.ActivityView.as_view(), name='activity_detail'),
     path(
         "account/<int:account_id>/activities",
-        views.ActivityListView.as_view(),
+        activity.ActivityListView.as_view(),
         name="activity_list",
     ),
 ]

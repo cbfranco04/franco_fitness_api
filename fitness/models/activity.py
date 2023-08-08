@@ -1,5 +1,5 @@
 from django.db import models
-from account import Account
+from .account import Account
 
 
 class Activity(models.Model):
