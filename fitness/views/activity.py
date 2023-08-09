@@ -15,13 +15,14 @@ class ActivityListView(APIView):
         account = Account.objects.filter(account_id=account_id).first()
         if not account:
             return Response(
-                {"error": f"Account with account_id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND
+                {"error": f"Account with account_id {account_id} not found."},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         activities = Activity.objects.filter(account=account)
         serializer = ActivitySerializer(activities, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     def post(self, request, account_id):
         # TODO: verify payload is correct format
         data = {
@@ -30,8 +31,11 @@ class ActivityListView(APIView):
 
         account = Account.objects.filter(account_id=account_id).first()
         if not account:
-            return Response({"error": f"Account with account_id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response(
+                {"error": f"Account with account_id {account_id} not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
         data["account_id"] = account_id
         serializer = ActivitySerializer(data=data)
         if serializer.is_valid():

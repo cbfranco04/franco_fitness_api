@@ -9,9 +9,7 @@ urlpatterns = [
         account.AccountView.as_view(),
         name="account_detail",
     ),
-    path(
-        "activity/<int:pk>/", activity.ActivityView.as_view(), name="activity_detail"
-    ),
+    path("activity/<int:pk>/", activity.ActivityView.as_view(), name="activity_detail"),
     path(
         "accounts/<int:account_id>/activities",
         activity.ActivityListView.as_view(),
