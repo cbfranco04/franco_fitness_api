@@ -9,7 +9,7 @@ class AccountSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Account
         fields = [
-            "id",
+            "account_id",
             "username",
             "first_name",
             "activities",

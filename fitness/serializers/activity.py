@@ -6,7 +6,7 @@ class ActivitySerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Activity
         fields = [
-            "id",
-            "account",
+            "activity_id",
+            "account_id",
             "title",
         ]

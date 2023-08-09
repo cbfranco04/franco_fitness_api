@@ -12,10 +12,10 @@ from ..serializers.activity import ActivitySerializer
 
 class ActivityListView(APIView):
     def get(self, request, account_id):
-        account = Account.objects.filter(id=account_id).first()
+        account = Account.objects.filter(account_id=account_id).first()
         if not account:
             return Response(
-                {"error": f"Account with id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND
+                {"error": f"Account with account_id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
         activities = Activity.objects.filter(account=account)
@@ -28,11 +28,11 @@ class ActivityListView(APIView):
             "title": request.data.get("title"),
         }
 
-        account = Account.objects.filter(id=account_id).first()
+        account = Account.objects.filter(account_id=account_id).first()
         if not account:
-            return Response({"error": f"Account with id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": f"Account with account_id {account_id} not found."}, status=status.HTTP_404_NOT_FOUND)
         
-        
+        data["account_id"] = account_id
         serializer = ActivitySerializer(data=data)
         if serializer.is_valid():
             serializer.save(account=account)  # Assign the 'account' to the new activity
@@ -43,7 +43,7 @@ class ActivityListView(APIView):
 
 class ActivityView(APIView):
     def get(self, request, pk):
-        activity = Activity.objects.filter(id=pk).first()
+        activity = Activity.objects.filter(activity_id=pk).first()
         if not activity:
             return Response(
                 {"error": "Activity not found."}, status=status.HTTP_404_NOT_FOUND

@@ -37,7 +37,7 @@ class AccountView(APIView):
         account_instance = self.get_object(account_id)
         if not account_instance:
             return Response(
-                {"error": f"Account with id {account_id} does not exists"},
+                {"error": f"Account with account_id {account_id} does not exists"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -47,6 +47,6 @@ class AccountView(APIView):
 
     def get_object(self, account_id):
         try:
-            return Account.objects.get(id=account_id)
+            return Account.objects.get(account_id=account_id)
         except Account.DoesNotExist:
             return None
