@@ -1,11 +1,16 @@
-from rest_framework import serializers
+from .dynamic_serializer import DynamicFieldsModelSerializer
 from ..models.account import Account
 from .activity import ActivitySerializer
 
 
-class AccountSerializer(serializers.ModelSerializer):
+class AccountSerializer(DynamicFieldsModelSerializer):
     activities = ActivitySerializer(many=True, read_only=True)
 
     class Meta:
         model = Account
-        fields = "__all__"
+        fields = [
+            "id",
+            "username",
+            "first_name",
+            "activities",
+        ]

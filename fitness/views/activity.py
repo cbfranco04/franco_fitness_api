@@ -49,5 +49,6 @@ class ActivityView(APIView):
                 {"error": "Activity not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
-        serializer = ActivitySerializer(activity)
+        fields = request.query_params.get("fields", None)
+        serializer = ActivitySerializer(activity, fields=fields)
         return Response(serializer.data, status=status.HTTP_200_OK)

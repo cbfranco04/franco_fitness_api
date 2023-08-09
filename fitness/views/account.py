@@ -34,7 +34,6 @@ class AccountView(APIView):
     # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, account_id, *args, **kwargs):
-        print(account_id)
         account_instance = self.get_object(account_id)
         if not account_instance:
             return Response(
@@ -42,7 +41,8 @@ class AccountView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        serializer = AccountSerializer(account_instance)
+        fields = request.query_params.get("fields", None)
+        serializer = AccountSerializer(account_instance, fields=fields)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_object(self, account_id):
